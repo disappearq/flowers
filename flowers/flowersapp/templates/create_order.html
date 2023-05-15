@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Подтверждение{% endblock %}
+
+{% block content %}
+<div class="createorder toCenter">
+  <h2>Подтверждение</h2>
+</div>
+<script>
+  $.get('{% url "create_order_ajax" %}', res => { $('.createorder').append(res)});
+
+  $(document).on('submit', '.createorder form', e => {
+      $.post('{% url "create_order_ajax" %}', $('.createorder form').serialize(), res => {
+        if (res == 'OK') window.location.replace("{% url 'orders' %}");
+        $('.createorder form').replaceWith(res);
+      });
+      e.preventDefault();
+      return false;
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+{% if products %}
+    <h2>Корзина</h2>
+
+    <div class="outProducts">
+        {% for p in products %}
+        <a href="{% url 'product_detail' p.product.id %}">
+            <div class="product">
+                <div class="image"><img src="{{ p.product.image.url }}" alt="Image"></div>
+                <h3><label>Название:</label> {{ p.product.name }}</h3>
+                <h3><label>Цена:</label> {{ p.product.price }}</h3>
+                <h3><label>В наличии:</label> {{ p.product.amount }} шт.</h3>
+            </div>
+                <button class="sub_from_cart" data-id="{{ p.product.id }}">-</button>
+                <label>в корзине {{ p.amount }} шт</label>
+                <button class="add_to_cart" data-id="{{ p.product.id }}">+</button>
+                {% endfor %}
+            <br>
+            <nav>
+                <a href="{% url 'create_order' %}">Оформить заказ</a>
+            </nav>
+        {% else %}
+            <h2>Нет товаров в корзине</h2>
+        {% endif %}
+        </div>
+        </a>
+      
+<script>
+    $(document).on('click', '.add_to_cart', e => { $obj = $(e.target);
+        $.get('/cart_add/' + $obj.data('id'), {}, res => { $obj.prev().html(res)});
+        e.preventDefault();
+        return false;
+    });
+    $(document).on('click', '.sub_from_cart', e => { $obj = $(e.target);
+        $.get('/cart_sub/' + $obj.data('id'), {}, res => { $obj.next().html(res)});
+        e.preventDefault();
+        return false;
+    });
+</script>
+
+{% endblock %}
